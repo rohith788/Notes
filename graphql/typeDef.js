@@ -22,9 +22,12 @@ module.exports = gql`
   }
   type Query {
     getNotes: [Note]
+    getNote(noteId: ID!): Note
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
+    createNote(body: String!): Note!
+    deleteNote(noteId: ID!): String!
   }
 `;
