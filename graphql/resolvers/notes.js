@@ -27,15 +27,20 @@ module.exports = {
     },
   },
   Mutation: {
-    async createNote(_, { body }, context) {
+    async createNote(_, { title, body }, context) {
       const user = checkAuth(context);
-
+      console.log(user);
       if (body.trim() === "") {
         throw new Error("Note must not be empty");
       }
 
+      if (title.trim() === "") {
+        throw new Error("Note Title must not be empty");
+      }
+
       const newNote = new Note({
-        body,
+        title: title,
+        body: body,
         user: user.id,
         username: user.username,
         createdAt: new Date().toISOString(),
