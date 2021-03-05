@@ -57,13 +57,15 @@ export default function NoteInputCard() {
       const data = proxy.readQuery({
         query: FETCH_NOTES_QUERY,
       });
-      if (data) {
-        data.getNotes = [result.data.createNote, ...data.getNotes];
-      }
-      proxy.writeQuery({ query: FETCH_NOTES_QUERY, data });
-      console.log(proxy);
+      proxy.writeQuery({
+        query: FETCH_NOTES_QUERY,
+        data: { getNotes: [result.data.createNote, ...data.getNotes] },
+      });
       values.body = "";
       values.title = "";
+    },
+    onError(err) {
+      return err;
     },
   });
 

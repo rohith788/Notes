@@ -3,11 +3,13 @@ import { useQuery } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 
 import NoteCard from "../components/card/card.component";
 import Header from "../components/menubar/menubar.component";
 
-// import { AuthContext } from "../context/auth";
+import { AuthContext } from "../context/auth";
 import { FETCH_NOTES_QUERY } from "../utils/graphql";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { loading, data } = useQuery(FETCH_NOTES_QUERY);
 
   const classes = useStyles();
@@ -38,19 +40,23 @@ const Home = () => {
         <Header />
       </Grid>
       <Grid container spacing={1}>
-        {data.getNotes &&
+        {user &&
+          data.getNotes &&
           data.getNotes.map((note) => {
-            return (
-              <Grid item xs={4} key={note.id}>
-                <Paper className={classes.paper}>
-                  <NoteCard
-                    title={note.title}
-                    noteText={note.body}
-                    modelView={open}
-                  />
-                </Paper>
-              </Grid>
-            );
+            if (note.username === user.username) {
+              return (
+                <Grid item xs={4} key={note.id}>
+                  <Paper className={classes.paper}>
+                    <NoteCard
+                      title={note.title}
+                      noteText={note.body}
+                      modelView={open}
+                      noteId={note.id}
+                    />
+                  </Paper>
+                </Grid>
+              );
+            }
           })}
       </Grid>
     </div>
