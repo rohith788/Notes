@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    // backgroundColor: "#ffc107  ",
   },
 }));
 
@@ -50,7 +51,7 @@ export default function SignUp(props) {
 
   const { onChange, onSubmit, values } = useForm(registerUser, initialState);
 
-  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+  const [addUser] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       context.login(userData);
       props.history.push("/");
@@ -72,15 +73,10 @@ export default function SignUp(props) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" component={"span"} variant="h5">
+        <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form
-          className={classes.form}
-          onSubmit={onSubmit}
-          noValidate
-          className={loading ? "loading" : ""}
-        >
+        <form className={classes.form} onSubmit={onSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -147,13 +143,12 @@ export default function SignUp(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            // onClick={onSubmit}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

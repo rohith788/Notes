@@ -29,7 +29,6 @@ module.exports = {
   Mutation: {
     async createNote(_, { title, body }, context) {
       const user = checkAuth(context);
-      console.log(user);
       if (body.trim() === "") {
         throw new Error("Note must not be empty");
       }
@@ -59,6 +58,30 @@ module.exports = {
         } else {
           throw new AuthenticationError("Action not allowed");
         }
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async updateNote(_, { noteId, title, body }, context) {
+      if (body.trim() === "") {
+        throw new Error("Note must not be empty");
+      }
+
+      if (title.trim() === "") {
+        throw new Error("Note Title must not be empty");
+      }
+      var ObjectID = require("mongodb").ObjectID;
+      try {
+        const newNote = await Note.updateOne(
+          { _id: ObjectID(noteId) },
+          {
+            $set: {
+              title: title,
+              body: body,
+            },
+          }
+        );
+        return await Note.findById(noteId);
       } catch (e) {
         throw new Error(e);
       }

@@ -2,45 +2,40 @@ import React, { useState, useEffect, useRef } from "react";
 import gql from "graphql-tag";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
 import clsx from "clsx";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Paper from "@material-ui/core/Paper";
 
 import { useMutation } from "@apollo/react-hooks";
 import { useForm } from "../../utils/hooks";
 import { FETCH_NOTES_QUERY } from "../../utils/graphql";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
-    // "& .MuiTextField-root": {
-    //   width: "45ch",
-    // },
-    // "& .MuiInputBase-root": {
-    //   width: "45ch",
-    // },
-    minWidth: 275,
-    paddingBottom: 1,
-    boxShadow: "none",
+    display: "flex",
+    flexWrap: "wrap",
+
+    "& > *": {
+      margin: theme.spacing(1),
+      width: theme.spacing(16),
+      height: theme.spacing(16),
+    },
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
+  paper_size: {
+    minWidth: 550,
+    marginTop: theme.spacing(1),
   },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 2,
+  "& .MuiTextField-root": {
+    // margin: theme.spacing(1),
+    // width: "50ch",
   },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
   },
-});
+}));
 
 export default function NoteInputCard() {
   const { values, onChange, onSubmit } = useForm(createNoteCallback, {
@@ -92,9 +87,15 @@ export default function NoteInputCard() {
     setExpanded(true);
   }; // Express input card on click
 
+  const oncomp = (event) => {
+    event.target.setAttribute("autocomplete", "off");
+  };
+
   return (
-    <Card className={classes.root} alignitems="center">
-      <CardActions disableSpacing>
+    // <Card className={classes.root}>
+    <Paper elevation={0} className={classes.paper_size}>
+      {/* <CardActions> */}
+      <div>
         <div
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -108,36 +109,39 @@ export default function NoteInputCard() {
             label="Title"
             variant="outlined"
             margin="normal"
-            required
-            fullWidth
             name="title"
             value={values.title}
             error={error ? true : false}
             onChange={onChange}
+            onFocus={oncomp}
             autoFocus
+            fullWidth
           />
         </div>
-      </CardActions>
-      <div className="note_text" ref={ref}>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          {/* <center> */}
-          <TextField
-            multilinef="true"
-            label="input note here"
-            variant="outlined"
-            rows={4}
-            required
-            fullWidth
-            name="body"
-            value={values.body}
-            error={error ? true : false}
-            onChange={onChange}
-          />
-          {/* </center> */}
-          <Button onClick={onSubmit}>Add</Button>
-        </Collapse>
+        <div className="note_text" ref={ref}>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <div>
+              <TextField
+                multiline
+                rows={4}
+                variant="outlined"
+                rows={4}
+                label="input note here"
+                name="body"
+                value={values.body}
+                error={error ? true : false}
+                onChange={onChange}
+                fullWidth
+              />
+            </div>
+            <div>
+              <Button onClick={onSubmit}>Add</Button>
+            </div>
+          </Collapse>
+        </div>
       </div>
-    </Card>
+      {/* </Card> */}
+    </Paper>
   );
 }
 

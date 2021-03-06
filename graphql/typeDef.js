@@ -30,5 +30,6 @@ module.exports = gql`
     login(username: String!, password: String!): User!
     createNote(title: String!, body: String!): Note!
     deleteNote(noteId: ID!): String!
+    updateNote(noteId: ID!, title: String, body: String!): Note!
   }
 `;

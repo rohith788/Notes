@@ -16,4 +16,16 @@ function AuthRoute({ component: Component, ...rest }) {
   );
 }
 
-export default AuthRoute;
+function RootRoute({ component: Component, ...rest }) {
+  const { user } = useContext(AuthContext);
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        user ? <Component {...props} /> : <Redirect to="/login" />
+      }
+    />
+  );
+}
+
+export { AuthRoute, RootRoute };
